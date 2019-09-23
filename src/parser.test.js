@@ -17,18 +17,38 @@ const normalizeOCRLine = (ocrLine) => {
 
 const ocrData = normalizeOCRLine(`
     _  _     _  _  _  _  _
+  | _| _||_||_ |_   ||_||_|
+  ||_  _|  | _||_|  ||_| _|
+`);
+
+const ocrDataErr = normalizeOCRLine(`
+    _  _     _  _  _  _  _
   ||_||_ |_||_ |_   ||_||_|
   ||_| _|  | _||_|  ||_| _|
 `);
 
+const ocrDataIll = normalizeOCRLine(`
+    _  _     _  _  _  _  _
+  | _|  ||_||_ |_   ||_||_|
+  ||_  _|  | _||_|  ||_| _|
+`);
+
+
 // Parse a single line
 export const parseLineTest = () => {
-  assert.equal(parseOCRLine(ocrData), '185456789 ERR');
+  assert.equal(parseOCRLine(ocrData), '123456789');
+  assert.equal(parseOCRLine(ocrDataErr), '185456789 ERR');
+  assert.equal(parseOCRLine(ocrDataIll), '12?456789 ILL');
 };
 
 // Read and parse a file
 export const parseFileTest = () => {
-  assert.deepEqual(parseOCRFile('input.txt'), ['185456789 ERR', '123756789 ERR', '123456789']);
+  assert.deepEqual(parseOCRFile('input.txt'), [
+    '185456789 ERR',
+    '123756789 ERR',
+    '123456789',
+    '1?3456789 ILL',
+  ]);
 };
 
 // Checksum unit test
