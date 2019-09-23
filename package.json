@@ -1,0 +1,30 @@
+{
+  "name": "account_num",
+  "version": "1.0.0",
+  "description": "Parse OCR output for account numbers",
+  "main": "index.js",
+  "scripts": {
+    "test": "teenytest test/lib/**/*.test.js --helper test/helper.js",
+    "build": "babel src --out-dir lib",
+    "lint": "eslint src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/otherchris/account_number.git"
+  },
+  "author": "Chris Caragianis",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/otherchris/account_number/issues"
+  },
+  "homepage": "https://github.com/otherchris/account_number#readme",
+  "devDependencies": {
+    "@babel/cli": "^7.6.0",
+    "@babel/core": "^7.6.0",
+    "@babel/preset-env": "^7.6.0",
+    "eslint": "^6.4.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "teenytest": "^5.2.0"
+  }
+}
