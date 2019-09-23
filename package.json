@@ -4,7 +4,7 @@
   "description": "Parse OCR output for account numbers",
   "main": "index.js",
   "scripts": {
-    "test": "npm run build && teenytest lib/**/*.test.js --helper test/helper.js",
+    "test": "cp -f input.txt lib &&npm run build && teenytest lib/**/*.test.js --helper test/helper.js",
     "build": "babel src --out-dir lib",
     "lint": "eslint src",
     "check": "npm run lint && npm test"
@@ -30,6 +30,7 @@
     "teenytest": "^5.2.0"
   },
   "dependencies": {
+    "fs": "0.0.1-security",
     "lodash": "^4.17.15"
   }
 }

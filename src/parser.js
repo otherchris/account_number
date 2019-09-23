@@ -3,6 +3,7 @@ import flatten from 'lodash/flatten';
 import map from 'lodash/map';
 import pad from 'lodash/pad';
 import zip from 'lodash/zip';
+import fs from 'fs';
 
 const readDigit = {
   '     |  |': 1,
@@ -19,16 +20,10 @@ const readDigit = {
 
 const lines = (ocrData) => {
   // make an array of lines
-  const rawLinesPlus = ocrData.split('\n');
-  // last line is a separator
-  const rawLines = rawLinesPlus.slice(0, -1);
+  const rawLines = ocrData.split('\n');
   // make sure trailing whitespace has not been trimmed
   return map(rawLines, (x) => pad(x, 27, ' '));
 };
-
-// Separate our lines into the chunks relevant
-// to a given account number digit.
-const chunkLine = (line) => chunk(line.split(''), 3);
 
 // Piece together the nine characters responsible for
 // encoding a given digit
@@ -38,12 +33,20 @@ const numberCodes = (chunkLists) => {
   return map(flatCodes, (x) => x.join(''));
 };
 
-const parseOCRLine = (str) => {
-  const ocrLines = lines(str);
-  const chunkedLines = map(ocrLines, (x) => chunkLine(x));
+export const parseOCRLine = (ocrLines) => {
+  const chunkedLines = map(ocrLines, (x) => chunk(x, 3));
   const codes = numberCodes(chunkedLines);
   const digits = map(codes, (x) => readDigit[x]);
   return digits.join('');
 };
 
-export default parseOCRLine;
+const parseOCRFile = (filepath) => {
+  const fileContents = fs.readFileSync(filepath, 'utf-8');
+  const allLines = lines(fileContents);
+  const ocrResultsRaw = chunk(allLines, 4);
+  // trim last line of each chunk
+  const ocrResults = map(ocrResultsRaw, (x) => x.slice(0, -1));
+  return map(ocrResults, (x) => parseOCRLine(x));
+};
+
+export default parseOCRFile;
