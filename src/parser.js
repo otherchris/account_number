@@ -2,6 +2,7 @@ import chunk from 'lodash/chunk';
 import flatten from 'lodash/flatten';
 import keys from 'lodash/keys';
 import map from 'lodash/map';
+import noop from 'lodash/noop';
 import pad from 'lodash/pad';
 import reduce from 'lodash/reduce';
 import zip from 'lodash/zip';
@@ -66,13 +67,21 @@ export const parseOCRLine = (ocrLines) => {
   return output(acctNum, checkSum(digits));
 };
 
-const parseOCRFile = (filepath) => {
-  const fileContents = fs.readFileSync(filepath, 'utf-8');
+const writeFile = (pathOut, data) => {
+  const fileDataOut = `${data.join('\n')}\n`;
+  fs.writeFileSync(pathOut, fileDataOut, noop);
+};
+
+const parseOCRFile = (filepathIn, filepathOut) => {
+  const fileContents = fs.readFileSync(filepathIn, 'utf-8');
   const allLines = lines(fileContents);
   const ocrResultsRaw = chunk(allLines, 4);
   // trim last line of each chunk
   const ocrResults = map(ocrResultsRaw, (x) => x.slice(0, -1));
-  return map(ocrResults, (x) => parseOCRLine(x));
+  const data = map(ocrResults, (x) => parseOCRLine(x));
+
+  writeFile(filepathOut, data);
+  return data;
 };
 
 export default parseOCRFile;

@@ -1,4 +1,5 @@
 import assert from 'assert';
+import fs from 'fs';
 import map from 'lodash/map';
 import pad from 'lodash/pad';
 import parseOCRFile, { checkSum, parseOCRLine } from './parser';
@@ -43,12 +44,13 @@ export const parseLineTest = () => {
 
 // Read and parse a file
 export const parseFileTest = () => {
-  assert.deepEqual(parseOCRFile('input.txt'), [
+  assert.deepEqual(parseOCRFile('input.txt', 'new_output.txt'), [
     '185456789 ERR',
     '123756789 ERR',
     '123456789',
     '1?3456789 ILL',
   ]);
+  assert.equal(fs.readFileSync('output.txt', 'utf-8'), fs.readFileSync('new_output.txt', 'utf-8'));
 };
 
 // Checksum unit test
