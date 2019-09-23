@@ -2,6 +2,7 @@ import chunk from 'lodash/chunk';
 import flatten from 'lodash/flatten';
 import map from 'lodash/map';
 import pad from 'lodash/pad';
+import reduce from 'lodash/reduce';
 import zip from 'lodash/zip';
 import fs from 'fs';
 
@@ -33,11 +34,25 @@ const numberCodes = (chunkLists) => {
   return map(flatCodes, (x) => x.join(''));
 };
 
+const output = (acctNum, chkSm) => {
+  if (chkSm === 0) {
+    return acctNum;
+  }
+  return `${acctNum} ERR`;
+};
+
+export const checkSum = (digitList) => {
+  const pairs = zip([9, 8, 7, 6, 5, 4, 3, 2, 1], digitList);
+  const values = map(pairs, (x) => x[0] * x[1]);
+  return reduce(values, (acc, x) => (acc + x) % 11, 0);
+};
+
 export const parseOCRLine = (ocrLines) => {
   const chunkedLines = map(ocrLines, (x) => chunk(x, 3));
   const codes = numberCodes(chunkedLines);
   const digits = map(codes, (x) => readDigit[x]);
-  return digits.join('');
+  const acctNum = digits.join('');
+  return output(acctNum, checkSum(digits));
 };
 
 const parseOCRFile = (filepath) => {
